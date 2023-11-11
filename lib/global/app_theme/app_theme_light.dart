@@ -11,9 +11,9 @@ ThemeData getAppThemeDataLight(BuildContext context) {
           const AppBarTheme(elevation: 0, backgroundColor: Colors.transparent),
       textTheme: TextTheme(
           bodySmall: const TextStyle(
-              color: Color.fromARGB(255, 15, 16, 1),
+              color: Color.fromARGB(255, 45, 69, 194),
               fontWeight: FontWeight.bold,
-              fontSize: 13),
+              fontSize: 18),
           bodyLarge: TextStyle(
               fontWeight: FontWeight.bold,
               color: const Color.fromARGB(255, 242, 241, 247),
