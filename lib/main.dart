@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_hotels/global/app_theme/app_theme_light.dart';
 
 import 'hotel_search_freature/presentation/pages/hotel_search.dart';
 
@@ -14,10 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Go Hotels',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: getAppThemeDataLight(context),
       home: const HotelSearchPage(),
     );
   }
