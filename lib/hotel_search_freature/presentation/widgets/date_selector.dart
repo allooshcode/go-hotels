@@ -1,8 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Date Range Selector Test'),
+        ),
+        body: DateRangeSelector(),
+      ),
+    );
+  }
+}
 
 class DateRangeSelector extends StatefulWidget {
-  const DateRangeSelector({super.key});
+  const DateRangeSelector({Key? key}) : super(key: key);
 
   @override
   _DateRangeSelectorState createState() => _DateRangeSelectorState();
@@ -11,29 +29,49 @@ class DateRangeSelector extends StatefulWidget {
 class _DateRangeSelectorState extends State<DateRangeSelector> {
   DateTime? _startDate;
   DateTime? _endDate;
-  DateTime? _selectedDate;
   TextEditingController _dateController = TextEditingController();
-  bool _isStartDateSelected = true;
+  DateTime? picked;
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
-        if (_isStartDateSelected) {
-          _startDate = picked;
-        } else {
-          _endDate = picked;
-        }
-      });
+  void _updateDateControllerText() {
+    if (_startDate != null) {
+      if (_endDate != null) {
+        _dateController.text =
+            'Date Range: ${_startDate!.toLocal()} - ${_endDate!.toLocal()}';
+      } else {
+        _dateController.text = 'Start Date: ${_startDate!.toLocal()}';
+      }
+    } else {
+      _dateController.text = '';
     }
+  }
+
+  Future _selectDate(BuildContext context) async {
+    picked = await showDatePicker(
+      context: context,
+      initialDate: _startDate ?? DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2100),
+    ).then((value) {
+      if (kDebugMode) {
+        print(picked?.day.toString());
+
+        print("Picked date: $picked");
+
+        if (picked != null) {
+          setState(() {
+            if (_startDate == null || picked!.isBefore(_startDate!)) {
+              _startDate = picked;
+              _endDate = null;
+            } else {
+              _endDate = picked;
+              return;
+            }
+          });
+        }
+        _updateDateControllerText();
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -43,35 +81,17 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Date Range'),
           TextFormField(
+            key: UniqueKey(), // Ensure a new key to force the rebuild
             controller: _dateController,
-            onTap: () => _selectDate(context),
-            readOnly: true,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: 'Select date range',
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Start Date: ${_startDate ?? 'Not selected'}'),
-              Text('End Date: ${_endDate ?? 'Not selected'}'),
-            ],
-          ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _isStartDateSelected = !_isStartDateSelected;
-                _dateController.clear();
-                _selectedDate = null;
-              });
+            onTap: () {
+              _selectDate(context);
             },
-            child: Text(
-                _isStartDateSelected ? 'Select End Date' : 'Select Start Date'),
+            readOnly: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Select Date Range',
+            ),
           ),
         ],
       ),

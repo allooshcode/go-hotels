@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:go_hotels/global/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
