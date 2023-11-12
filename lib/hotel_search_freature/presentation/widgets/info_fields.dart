@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_hotels/hotel_search_freature/presentation/widgets/city_selector.dart';
 import 'package:go_hotels/hotel_search_freature/presentation/widgets/date_selector.dart';
+import 'package:go_hotels/hotel_search_freature/presentation/widgets/nationalities_selector.dart';
 
 class InfoFields extends StatelessWidget {
   const InfoFields({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class InfoFields extends StatelessWidget {
         children: [
           CitySelector(),
           const DateRangeSelector(),
-          CitySelector(),
+          const NationalitySelector(),
           CitySelector(),
         ],
       ),

@@ -1,73 +1,144 @@
+// // data_provider.dart
+// import 'dart:async';
 // import 'package:flutter/material.dart';
-// import 'package:flutter_typeahead/flutter_typeahead.dart';
-// import 'package:go_hotels/global/utils/constants.dart';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:equatable/equatable.dart';
 //
-// class TestPage extends StatelessWidget {
-//   const TestPage({super.key});
+// class DateRangeDataProvider {
+//   Future<DateTime?> pickDate(DateTime initialDate) async {
+//     // Implement date picking logic here
+//     return Future.delayed(Duration(seconds: 1), () => DateTime.now());
+//   }
+// }
+//
+// // date_range_repository.dart
+//
+// abstract class DateRangeRepository {
+//   final DateRangeDataProvider dataProvider;
+//
+//   DateRangeRepository(this.dataProvider);
+//
+//   Future<DateTime?> pickDate(DateTime initialDate);
+// }
+//
+// // date_range_bloc.dart
+//
+// // Events
+// abstract class DateRangeEvent extends Equatable {
+//   const DateRangeEvent();
+//
+//   @override
+//   List<Object?> get props => [];
+// }
+//
+// class DateSelectedEvent extends DateRangeEvent {
+//   final DateTime selectedDate;
+//
+//   DateSelectedEvent(this.selectedDate);
+//
+//   @override
+//   List<Object?> get props => [selectedDate];
+// }
+//
+// // States
+// class DateRangeState extends Equatable {
+//   final DateTime? startDate;
+//   final DateTime? endDate;
+//
+//   const DateRangeState(this.startDate, this.endDate);
+//
+//   @override
+//   List<Object?> get props => [startDate, endDate];
+// }
+//
+// // BLoC
+// class DateRangeBloc extends Bloc<DateRangeEvent, DateRangeState> {
+//   final DateRangeRepository dateRangeRepository;
+//
+//   DateRangeBloc(this.dateRangeRepository) : super(DateRangeState(null, null));
+//
+//   on<DateRangeEvent>((event, emit) async {
+//   emit(NationalityInitial());
+//   final response = await fetchNationalityUseCase.execute();
+//
+//   response.fold((l) => emit(ErrorNationalityState(l.msgError)),
+//   (r) => emit(LoadedNationalitiesState(r)));
+// });
+//   @override
+//   Stream<DateRangeState> mapEventToState(DateRangeEvent event) async* {
+//     if (event is DateSelectedEvent) {
+//       yield* _mapDateSelectedToState(event);
+//     }
+//   }
+//
+//   Stream<DateRangeState> _mapDateSelectedToState(
+//       DateSelectedEvent event) async* {
+//     if (state.startDate == null ||
+//         event.selectedDate.isBefore(state.startDate!)) {
+//       yield DateRangeState(event.selectedDate, null);
+//     } else {
+//       yield DateRangeState(state.startDate, event.selectedDate);
+//     }
+//   }
+// }
+//
+// // main.dart
+//
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('City Selector'),
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text('Date Range Selector Test'),
+//         ),
+//         body: BlocProvider(
+//           create: (context) =>
+//               DateRangeBloc(DateRangeRepository(DateRangeDataProvider())),
+//           child: DateRangeSelector(),
+//         ),
 //       ),
-//       body: CitySelector(),
 //     );
 //   }
 // }
 //
-// class CitySelector extends StatelessWidget {
-//   CitySelector({super.key});
-//
-//   Future<List<String>> getSuggestions(String query) async {
-//     final response = await http.get(
-//       Uri.parse(
-//           'http://api.geonames.org/searchJSON?q=$query&maxRows=5&username=alaa'),
-//     );
-//
-//     if (response.statusCode == 200) {
-//       final data = jsonDecode(response.body);
-//       final List<dynamic> cities = data['geonames'];
-//       return cities.map((city) => city['name']).cast<String>().toList();
-//     } else {
-//       throw Exception('Failed to load cities');
-//     }
-//   }
-//
-//   TextEditingController? textEditingController = TextEditingController();
-//
+// class DateRangeSelector extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(8),
-//       child: SizedBox(
-//         // width: AppConstants.unitWidthValu(context) * 0.8,
-//         child: TypeAheadField(
-//           textFieldConfiguration: TextFieldConfiguration(
-//             controller: textEditingController,
-//             style: Theme.of(context).textTheme.bodySmall,
-//             decoration: InputDecoration(
-//               fillColor: Theme.of(context).colorScheme.primary,
-//               labelText: 'City',
-//               border:
-//                   OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-//             ),
+//     return BlocBuilder<DateRangeBloc, DateRangeState>(
+//       builder: (context, state) {
+//         return Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               TextFormField(
+//                 key: UniqueKey(),
+//                 readOnly: true,
+//                 decoration: const InputDecoration(
+//                   border: OutlineInputBorder(),
+//                   hintText: 'Select Date Range',
+//                 ),
+//                 onTap: () async {
+//                   DateTime? pickedDate =
+//                       await BlocProvider.of<DateRangeBloc>(context)
+//                           .dateRangeRepository
+//                           .pickDate(
+//                             state.startDate ?? DateTime.now(),
+//                           );
+//
+//                   if (pickedDate != null) {
+//                     BlocProvider.of<DateRangeBloc>(context)
+//                         .add(DateSelectedEvent(pickedDate));
+//                   }
+//                 },
+//               ),
+//             ],
 //           ),
-//           suggestionsCallback: (pattern) => getSuggestions(pattern),
-//           itemBuilder: (context, suggestion) {
-//             return ListTile(
-//               title: Text(suggestion),
-//             );
-//           },
-//           onSuggestionSelected: (suggestion) {
-//             textEditingController?.text = suggestion;
-//             // Handle the selected suggestion as needed
-//             print('Selected: $suggestion');
-//           },
-//         ),
-//       ),
+//         );
+//       },
 //     );
 //   }
 // }
