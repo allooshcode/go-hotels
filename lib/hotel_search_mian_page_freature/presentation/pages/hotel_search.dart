@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_hotels/hotel_search_mian_page_freature/presentation/widgets/info_fields.dart';
+import 'package:go_hotels/hotel_search_mian_page_freature/info_fields.dart';
 
 import '../widgets/hotels_search_text_header_conainer.dart';
 

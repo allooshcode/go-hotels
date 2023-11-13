@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_hotels/global/utils/constants.dart';
 
+import '../../../global/shared_widgets/custom_container.dart';
+import '../../../global/shared_widgets/text_form_field_box_decoration.dart';
+
 class RoomDetails {
   int roomNumber;
   int adultNumber;
@@ -40,26 +43,13 @@ class _BookingDetailsState extends State<RoomBookingDetails> {
         children: [
           const SizedBox(height: 16.0),
           // Button to show booking details
-          Container(
-            width: AppConstants.unitWidthValu(context) * 90,
-            margin: const EdgeInsets.all(4),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(30)),
+          CustomContainer(
             child: TextFormField(
               onTap: () => _showBookingDetails(context),
               textAlign: TextAlign.center,
               readOnly: true,
               style: Theme.of(context).textTheme.bodySmall,
-              decoration: InputDecoration(
-                fillColor: Theme.of(context).colorScheme.primary,
-                filled: true,
-                hintText: mainButtonText,
-                hintStyle: Theme.of(context).textTheme.bodySmall,
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-              ),
+              decoration: decoration(context, mainButtonText),
             ),
           ),
         ],

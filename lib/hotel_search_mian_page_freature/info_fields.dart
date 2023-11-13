@@ -4,7 +4,7 @@ import 'package:go_hotels/hotel_search_mian_page_freature/presentation/widgets/d
 import 'package:go_hotels/hotel_search_mian_page_freature/presentation/widgets/room_details_booking.dart';
 import 'package:go_hotels/nationality_select_feature/presentation/pages/nationalities_selector.dart';
 
-import '../../../room_details_booking_feature/presentation/pages/room_details_booking_info.dart';
+import '../room_details_booking_feature/presentation/pages/room_details_booking_info.dart';
 
 class InfoFields extends StatelessWidget {
   const InfoFields({Key? key}) : super(key: key);

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:go_hotels/global/shared_widgets/custom_container.dart';
+import 'package:go_hotels/global/shared_widgets/text_form_field_box_decoration.dart';
 import 'package:go_hotels/global/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 //>>>>>>>>>>>>>>>>>>>>>>>>
-
+//   <<          <<<       <<<<
 //HERE CAN BE ACHEIVED BY CLEAN ARCHETICHER ALSO BUT FOR quick reply i did like that , the same thing also for date selector and room booking details
-// btw select nationality was done in clean ARCHETICHER.....
-
+// btw select nationality was done in clean architecture .....
+//   >>  >>> >>>>>
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 // ignore: must_be_immutable
@@ -34,41 +36,27 @@ class CitySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: AppConstants.unitWidthValu(context) * 90,
-      margin: const EdgeInsets.all(4),
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(30)),
-      child: TypeAheadField(
-        textFieldConfiguration: TextFieldConfiguration(
+    return CustomContainer(
+        child: TypeAheadField(
+      textFieldConfiguration: TextFieldConfiguration(
           controller: textEditingController,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall,
-          decoration: InputDecoration(
-            fillColor: Theme.of(context).colorScheme.primary,
-            filled: true,
-            hintText: 'Select City',
-            hintStyle: Theme.of(context).textTheme.bodySmall,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+          decoration: decoration(context, 'Select City')),
+      suggestionsCallback: (pattern) => getSuggestions(pattern),
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(
+            suggestion,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
-        ),
-        suggestionsCallback: (pattern) => getSuggestions(pattern),
-        itemBuilder: (context, suggestion) {
-          return ListTile(
-            title: Text(
-              suggestion,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          );
-        },
-        onSuggestionSelected: (suggestion) {
-          textEditingController?.text = suggestion;
-          // Handle the selected suggestion as needed
-          print('Selected: $suggestion');
-        },
-      ),
-    );
+        );
+      },
+      onSuggestionSelected: (suggestion) {
+        textEditingController?.text = suggestion;
+        // Handle the selected suggestion as needed
+        print('Selected: $suggestion');
+      },
+    ));
   }
 }

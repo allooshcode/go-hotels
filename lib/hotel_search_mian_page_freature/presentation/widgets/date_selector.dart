@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_hotels/global/shared_widgets/custom_container.dart';
 import 'package:go_hotels/global/utils/constants.dart';
+
+import '../../../global/shared_widgets/text_form_field_box_decoration.dart';
 
 class DateRangeSelector extends StatefulWidget {
   const DateRangeSelector({Key? key}) : super(key: key);
@@ -64,28 +67,16 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: AppConstants.unitWidthValu(context) * 90,
-            margin: const EdgeInsets.all(4),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(30)),
+          CustomContainer(
             child: TextFormField(
-              textAlign: TextAlign.center,
-
-              key: UniqueKey(), // Ensure a new key to force the rebuild
-              controller: _dateController,
-              onTap: () {
-                _selectDate(context);
-              },
-              readOnly: true,
-              decoration: InputDecoration(
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                hintText: 'check in | check out',
-              ),
-            ),
+                textAlign: TextAlign.center,
+                key: UniqueKey(), // Ensure a new key to force the rebuild
+                controller: _dateController,
+                onTap: () {
+                  _selectDate(context);
+                },
+                readOnly: true,
+                decoration: decoration(context, 'check in | check out')),
           ),
         ],
       ),
